@@ -1,7 +1,8 @@
 import cat;
+import "cat.hpp";
 import std;
 
 int main()
 {
-    func();
+    FUNCTION();
 }
