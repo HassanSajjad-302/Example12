@@ -1,10 +1,10 @@
-
 #include "Configure.hpp"
 
 void buildSpecification()
 {
     // DSC constructor has this line         prebuiltBasic->objectFileProducers.emplace(objectFileProducer);
-    // which specifies std CppSourceTarget (and transitively its object-files) as dependency of std LinkOrArchiveTarget.
+    // which specifies std CppSourceTarget (and transitively its object-files) as a dependency of std
+    // LinkOrArchiveTarget.
     DSC<CppSourceTarget> &std = GetCppObjectDSC("std");
     std.getSourceTarget().INTERFACE_FILES("std/std.cpp").ASSIGN(CxxSTD::V_20);
 
@@ -20,20 +20,20 @@ void buildSpecification()
     DSC<CppSourceTarget> &app = GetCppExeDSC("app");
     app.getSourceTarget().MODULE_FILES("main.cpp");
 
-    // This will define two new CppSourceTargets. saveAndReplace will save the older CppSourceTarget in the
-    // DSC<CppSourceTarget> while replacing it with these newer one to be used in PRIVATE_LIBRARIES function. This new
+    // This will define two new CppSourceTargets. saveAndReplace will save the older CppSourceTargets in the
+    // DSC<CppSourceTarget> while replacing it with these newer ones to be used in PRIVATE_LIBRARIES function. This new
     // target is compiled with the default value /std:c++latest same as the main.cpp. saveAndReplace will also populate
-    // the module files of these newer targets with the similar value of the older targets. assignObjectFileProducerDeps
-    // is used instead of PRIVATE_LIBRARIES because besides adding std CppSourceTarget as dependency of cat
-    // CppSourceTarget, PRIVATE_LIBRARIES also adds std LinkOrArchiveTarget as dependency of cat LinkOrArchiveTarget
+    // the module files of these newer targets with similar values to the older targets. assignObjectFileProducerDeps
+    // is used instead of PRIVATE_LIBRARIES because besides adding std CppSourceTarget as a dependency of cat
+    // CppSourceTarget, PRIVATE_LIBRARIES also adds std LinkOrArchiveTarget as a dependency of cat LinkOrArchiveTarget
     // which has already been done. Please notice that the older CppSourceTargets that we are replacing in the
     // following, we had already specified them (and transitively their object files) as the dependency of the
     // respective LinkOrArchiveTargets in the DSC constructor. The newer, following declared, CppSourceTargets are not
-    // specified as dependnecy of any LinkOrArchiveTaget, hence the object files of these are wasted but the ifc files
+    // specified as a dependency of any LinkOrArchiveTaget, hence the object files of these are wasted but the ifc files
     // are used while compiling their dependents.
 
     // If the following 4 lines are commented out, two warnings of incompatible ifcs  are printed as
-    // there is bmi incompatibility introduced because of difference in language versions.
+    // there is bmi incompatibility introduced because of differences in language versions.
     CppSourceTarget &std1 = GetCppObject("std1-cpp");
     CppSourceTarget &cat1 = GetCppObject("cat1-cpp");
     std.saveAndReplace(&std1);
